@@ -460,7 +460,6 @@ static size_t x_get_border_rectangles(Con *con, xcb_rectangle_t rectangles[4]) {
     return count;
 }
 
-
 void x_shape_title(Con *con){
 
     if (con->layout != L_TABBED && con->layout != L_STACKED) {

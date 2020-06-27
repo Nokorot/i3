@@ -22,6 +22,7 @@ state INITIAL:
   'shmlog' -> SHMLOG
   'debuglog' -> DEBUGLOG
   'border' -> BORDER
+  'default_border_radius' -> DEFAULT_BORDER_RADIUS
   'layout' -> LAYOUT
   'append_layout' -> APPEND_LAYOUT
   'workspace' -> WORKSPACE
@@ -93,6 +94,16 @@ state BORDER:
     -> call cmd_border($border_style, 0)
   '1pixel'
     -> call cmd_border("pixel", 1)
+  'radius'
+    -> BORDER_RADIUS
+
+state BORDER_RADIUS:
+  border_radius = number
+    -> call cmd_border_radius($border_radius)
+
+state DEFAULT_BORDER_RADIUS:
+  default_border_radius = number
+    -> call cmd_default_border_radius($default_border_radius)
 
 # gaps inner|outer|horizontal|vertical|top|right|bottom|left [current] [set|plus|minus|toggle] <px>
 state GAPS:
@@ -149,7 +160,7 @@ state WORKSPACE:
       -> call cmd_workspace_back_and_forth()
   'number'
       -> WORKSPACE_NUMBER
-  workspace = string 
+  workspace = string
       -> call cmd_workspace_name($workspace, $no_auto_back_and_forth)
 
 state WORKSPACE_NUMBER:

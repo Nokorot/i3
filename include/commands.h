@@ -74,6 +74,12 @@ void cmd_resize_set(I3_CMD, long cwidth, const char *mode_width, long cheight, c
  */
 void cmd_resize(I3_CMD, const char *way, const char *direction, long resize_px, long resize_ppt);
 
+
+void cmd_border_radius(I3_CMD, long border_radius);
+
+
+void cmd_default_border_radius(I3_CMD, long border_radius);
+
 /**
  * Implementation of 'border normal|pixel [<n>]', 'border none|1pixel|toggle'.
  *

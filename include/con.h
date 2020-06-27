@@ -437,6 +437,13 @@ adjacent_t con_adjacent_borders(Con *con);
  */
 int con_border_style(Con *con);
 
+
+/*
+ * Sets the given border radius on con.
+ *
+ */
+void con_set_boder_radius(Con *con, int border_radius);
+
 /**
  * Sets the given border style on con, correctly keeping the position/size of a
  * floating window.

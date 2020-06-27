@@ -42,6 +42,7 @@ Con *con_new_skeleton(Con *parent, i3Window *window) {
     new->type = CT_CON;
     new->window = window;
     new->border_style = config.default_border;
+    new->border_radius = config.default_border_radius;
     new->current_border_width = -1;
     if (window) {
         new->depth = window->depth;
@@ -1664,9 +1665,6 @@ Rect con_border_style_rect(Con *con) {
             return (Rect){0, 0, 0, 0};
     }
 
-    // Copy border_radius from config to con 
-    con->border_radius = config.border_radius;
-
     adjacent_t borders_to_hide = ADJ_NONE;
     int border_width = con->current_border_width;
     DLOG("The border width for con is set to: %d\n", con->current_border_width);
@@ -1762,6 +1760,14 @@ int con_border_style(Con *con) {
         return BS_NONE;
 
     return con->border_style;
+}
+
+/*
+ * Sets the given border radius on con.
+ *
+ */
+void con_set_border_radius(Con *con, int border_radius) {
+    con->border_radius = border_radius;
 }
 
 /*

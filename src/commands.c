@@ -723,6 +723,45 @@ static int border_width_from_style(border_style_t border_style, long border_widt
 }
 
 /*
+ * Implementation of 'default_border_radius <radius>'.
+ *
+ */
+void cmd_default_border_radius(I3_CMD, long border_radius) {
+    DLOG("default border radius should be changed to %ld\n", border_radius);
+    owindow *current;
+
+    HANDLE_EMPTY_MATCH;
+
+    TAILQ_FOREACH (current, &owindows, owindows) {
+        DLOG("matching: %p / %s\n", current->con, current->con->name);
+
+        config.border_radius = border_radius;
+    }
+
+    ysuccess(true);
+}
+
+/*
+ * Implementation of 'border_radius <radius>'.
+ *
+ */
+void cmd_border_radius(I3_CMD, long border_radius) {
+    DLOG("border radius should be changed to %ld\n", border_radius);
+    owindow *current;
+
+    HANDLE_EMPTY_MATCH;
+
+    TAILQ_FOREACH (current, &owindows, owindows) {
+        DLOG("matching: %p / %s\n", current->con, current->con->name);
+
+        con_set_boder_radius(current->con, logical_px(border_radius));
+    }
+
+    cmd_output->needs_tree_render = true;
+    ysuccess(true);
+}
+
+/*
  * Implementation of 'border normal|pixel [<n>]', 'border none|1pixel|toggle'.
  *
  */
