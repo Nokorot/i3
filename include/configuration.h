@@ -262,7 +262,7 @@ struct Config {
     smart_gaps_t smart_gaps;
 
     /* Border radius (resloved/i3) */
-    int32_t border_radius;
+    int32_t default_border_radius;
 };
 
 /**

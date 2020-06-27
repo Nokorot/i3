@@ -735,7 +735,7 @@ void cmd_default_border_radius(I3_CMD, long border_radius) {
     TAILQ_FOREACH (current, &owindows, owindows) {
         DLOG("matching: %p / %s\n", current->con, current->con->name);
 
-        config.border_radius = border_radius;
+        config.default_border_radius = border_radius;
     }
 
     ysuccess(true);
