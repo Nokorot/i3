@@ -19,6 +19,7 @@ working. Please reach out to us in that case!
   • configure: respect --program-suffix
   • use exec to avoid leaving useless shell process
   • ipc: always include the marks property (even if empty)
+  • ipc: introduce GET_BINDING_STATE command
   • introduce “tiling_from” and ”floating_from” criteria
   • make dock client order deterministic (sorted by class/instance) as a
     side effect, i3bars without an explicit bar-id will be sorted according
@@ -43,3 +44,4 @@ working. Please reach out to us in that case!
   • build: fix issues with parallel build
   • set _NET_DESKTOP_VIEWPORT after randr changes
   • fix a bug with i3-nagbar not starting after it has already started once
+  • fix conflict when moving parent of fullscreen window to workspace
