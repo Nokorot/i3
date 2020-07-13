@@ -745,7 +745,7 @@ void cmd_default_border_radius(I3_CMD, long border_radius) {
  * Implementation of 'border_radius <radius>'.
  *
  */
-void cmd_border_radius(I3_CMD, long border_radius) {
+void cmd_border_radius(I3_CMD, const char *mode, long border_radius) {
     DLOG("border radius should be changed to %ld\n", border_radius);
     owindow *current;
 
@@ -754,7 +754,15 @@ void cmd_border_radius(I3_CMD, long border_radius) {
     TAILQ_FOREACH (current, &owindows, owindows) {
         DLOG("matching: %p / %s\n", current->con, current->con->name);
 
-        con_set_boder_radius(current->con, logical_px(border_radius));
+        uint32_t radius = current->con->border_radius;
+        if (strcmp(mode, "set") == 0)
+            radius = logical_px(border_radius);
+        else if (strcmp(mode, "plus") == 0)
+            radius += logical_px(border_radius);
+        else if (strcmp(mode, "minus") == 0)
+            radius -= logical_px(border_radius);
+        if (radius < 0)  radius = 0;
+        con_set_border_radius(current->con, radius);
     }
 
     cmd_output->needs_tree_render = true;

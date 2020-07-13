@@ -87,6 +87,7 @@ state DEBUGLOG:
 
 # border normal|pixel [<n>]
 # border none|1pixel|toggle
+# border radius plus|minus|set <radius>
 state BORDER:
   border_style = 'normal', 'pixel', 'toggle'
     -> BORDER_WIDTH
@@ -98,8 +99,14 @@ state BORDER:
     -> BORDER_RADIUS
 
 state BORDER_RADIUS:
+  mode = 'plus', 'minus', 'set'
+    -> BORDER_RADIUS_MODE
   border_radius = number
-    -> call cmd_border_radius($border_radius)
+    -> call cmd_border_radius("set", $border_radius)
+
+state BORDER_RADIUS_MODE:
+  border_radius = number
+    -> call cmd_border_radius($mode, $border_radius)
 
 state DEFAULT_BORDER_RADIUS:
   default_border_radius = number
