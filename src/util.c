@@ -29,6 +29,10 @@ int max(int a, int b) {
     return (a > b ? a : b);
 }
 
+int clamp(int a, int low, int high) {
+    return a > high ? high : a < low ? low : a;
+}
+
 bool rect_contains(Rect rect, uint32_t x, uint32_t y) {
     return (x >= rect.x &&
             x <= (rect.x + rect.width) &&

@@ -754,14 +754,14 @@ void cmd_border_radius(I3_CMD, const char *mode, long border_radius) {
     TAILQ_FOREACH (current, &owindows, owindows) {
         DLOG("matching: %p / %s\n", current->con, current->con->name);
 
-        uint32_t radius = current->con->border_radius;
+        int radius; Con* con = current->con;
         if (strcmp(mode, "set") == 0)
             radius = logical_px(border_radius);
         else if (strcmp(mode, "plus") == 0)
-            radius += logical_px(border_radius);
+            radius = con->border_radius + logical_px(border_radius);
         else if (strcmp(mode, "minus") == 0)
-            radius -= logical_px(border_radius);
-        if (radius < 0)  radius = 0;
+            radius = con->border_radius - logical_px(border_radius);
+        radius = clamp(radius,0,min(con->rect.width/2, con->rect.height/2));
         con_set_border_radius(current->con, radius);
     }
 
