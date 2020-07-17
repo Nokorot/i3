@@ -303,7 +303,11 @@ void cmd_move_con_to_workspace(I3_CMD, const char *which) {
 
     /* get the workspace */
     Con *ws;
-    if (strcmp(which, "next") == 0)
+    if (strcmp(which, "first") == 0)
+        ws = workspace_first();
+    else if (strcmp(which, "last") == 0)
+        ws = workspace_last();
+    else if (strcmp(which, "next") == 0)
         ws = workspace_next();
     else if (strcmp(which, "prev") == 0)
         ws = workspace_prev();
@@ -905,7 +909,11 @@ void cmd_workspace(I3_CMD, const char *which) {
         return;
     }
 
-    if (strcmp(which, "next") == 0)
+    if (strcmp(which, "first") == 0)
+        ws = workspace_first();
+    else if (strcmp(which, "last") == 0)
+        ws = workspace_last();
+    else if (strcmp(which, "next") == 0)
         ws = workspace_next();
     else if (strcmp(which, "prev") == 0)
         ws = workspace_prev();

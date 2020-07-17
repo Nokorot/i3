@@ -583,6 +583,52 @@ void workspace_show_by_name(const char *num) {
 }
 
 /*
+ * Focuses the first workspace.
+ *
+ */
+Con *workspace_first(void) {
+    Con *first = NULL;
+    Con *output;
+
+    TAILQ_FOREACH (output, &(croot->nodes_head), nodes) {
+        /* Skip outputs starting with __, they are internal. */
+        if (con_is_internal(output))
+            continue;
+        NODES_FOREACH (output_get_content(output)) {
+            if (child->type != CT_WORKSPACE)
+                continue;
+            // return child;
+            if (!first || (child->num != -1 && child->num < first->num))
+                first = child;
+        }
+    }
+    return first;
+}
+
+/*
+ * Focuses the last workspace.
+ *
+ */
+Con *workspace_last(void) {
+
+    Con *last = NULL;
+    Con *output;
+
+    TAILQ_FOREACH (output, &(croot->nodes_head), nodes) {
+        /* Skip outputs starting with __, they are internal. */
+        if (con_is_internal(output))
+            continue;
+        NODES_FOREACH (output_get_content(output)) {
+            if (child->type != CT_WORKSPACE)
+                continue;
+            if (!last || last->num != -1 || last->num < child->num)
+                last = child;
+        }
+    }
+    return last;
+}
+
+/*
  * Focuses the next workspace.
  *
  */

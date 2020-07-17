@@ -161,12 +161,18 @@ state APPEND_LAYOUT:
 state WORKSPACE:
   no_auto_back_and_forth = '--no-auto-back-and-forth'
       ->
-  direction = 'next_on_output', 'prev_on_output', 'next', 'prev'
+  direction = 'next_on_output', 'prev_on_output', 'first', 'last', 'next', 'prev'
       -> call cmd_workspace($direction)
   'back_and_forth'
       -> call cmd_workspace_back_and_forth()
   'number'
       -> WORKSPACE_NUMBER
+  'name'
+      -> WORKSPACE_NAME
+  workspace = string
+      -> call cmd_workspace_name($workspace, $no_auto_back_and_forth)
+
+state WORKSPACE_NAME:
   workspace = string
       -> call cmd_workspace_name($workspace, $no_auto_back_and_forth)
 
@@ -405,7 +411,7 @@ state MOVE_DIRECTION_PX:
 state MOVE_WORKSPACE:
   'to '
       -> MOVE_WORKSPACE_TO_OUTPUT
-  workspace = 'next_on_output', 'prev_on_output', 'next', 'prev', 'current'
+  workspace = 'next_on_output', 'prev_on_output', 'first', 'last', 'next', 'prev', 'current'
       -> call cmd_move_con_to_workspace($workspace)
   'back_and_forth'
       -> call cmd_move_con_to_workspace_back_and_forth()
