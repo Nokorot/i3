@@ -207,6 +207,8 @@ int main(int argc, char *argv[]) {
                 message_type = I3_IPC_MESSAGE_TYPE_SEND_TICK;
             } else if (strcasecmp(optarg, "subscribe") == 0) {
                 message_type = I3_IPC_MESSAGE_TYPE_SUBSCRIBE;
+            } else if (strcasecmp(optarg, "get_focused") == 0) {
+                message_type = I3_IPC_MESSAGE_TYPE_GET_FOCUSED;
             } else {
                 printf("Unknown message type\n");
                 printf("Known types: run_command, get_workspaces, get_outputs, get_tree, get_marks, get_bar_config, get_binding_modes, get_version, get_config, send_tick, subscribe\n");
@@ -265,6 +267,7 @@ int main(int argc, char *argv[]) {
             err(EXIT_FAILURE, "IPC: read()");
         exit(1);
     }
+
     if (reply_type != message_type)
         errx(EXIT_FAILURE, "IPC: Received reply of type %d but expected %d", reply_type, message_type);
     /* For the reply of commands, have a look if that command was successful.

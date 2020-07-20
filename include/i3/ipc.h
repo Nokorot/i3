@@ -66,6 +66,11 @@ typedef struct i3_ipc_header {
 /** Trigger an i3 sync protocol message via IPC. */
 #define I3_IPC_MESSAGE_TYPE_SYNC 11
 
+
+/** Requests the tree layout from i3 */
+#define I3_IPC_MESSAGE_TYPE_GET_FOCUSED 12
+
+
 /*
  * Messages from i3 to clients
  *
@@ -82,6 +87,8 @@ typedef struct i3_ipc_header {
 #define I3_IPC_REPLY_TYPE_CONFIG 9
 #define I3_IPC_REPLY_TYPE_TICK 10
 #define I3_IPC_REPLY_TYPE_SYNC 11
+
+#define I3_IPC_REPLY_TYPE_FOCUSED 12
 
 /*
  * Events from i3 to clients. Events have the first bit set high.
