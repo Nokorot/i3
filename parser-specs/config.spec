@@ -27,6 +27,7 @@ state INITIAL:
   'gaps'                                   -> GAPS
   'smart_borders'                          -> SMART_BORDERS
   'smart_gaps'                             -> SMART_GAPS
+  'default_border_radius'                  -> DEFAULT_BORDER_RADIUS
   'floating_minimum_size'                  -> FLOATING_MINIMUM_SIZE_WIDTH
   'floating_maximum_size'                  -> FLOATING_MAXIMUM_SIZE_WIDTH
   'floating_modifier'                      -> FLOATING_MODIFIER
@@ -89,6 +90,11 @@ state SMART_GAPS:
       -> call cfg_smart_gaps($enabled)
   enabled = 'inverse_outer'
       -> call cfg_smart_gaps($enabled)
+
+# default_border_radius <radius>
+state DEFAULT_BORDER_RADIUS:
+  radius = number
+      -> call cfg_default_border_radius(&radius)
 
 # floating_minimum_size <width> x <height>
 state FLOATING_MINIMUM_SIZE_WIDTH:
@@ -208,16 +214,18 @@ state NO_FOCUS_END:
 
 # Criteria: Used by for_window and assign.
 state CRITERIA:
-  ctype = 'class'       -> CRITERION
-  ctype = 'instance'    -> CRITERION
-  ctype = 'window_role' -> CRITERION
-  ctype = 'con_id'      -> CRITERION
-  ctype = 'id'          -> CRITERION
-  ctype = 'window_type' -> CRITERION
-  ctype = 'con_mark'    -> CRITERION
-  ctype = 'title'       -> CRITERION
-  ctype = 'urgent'      -> CRITERION
-  ctype = 'workspace'   -> CRITERION
+  ctype = 'class'         -> CRITERION
+  ctype = 'instance'      -> CRITERION
+  ctype = 'window_role'   -> CRITERION
+  ctype = 'con_id'        -> CRITERION
+  ctype = 'id'            -> CRITERION
+  ctype = 'window_type'   -> CRITERION
+  ctype = 'con_mark'      -> CRITERION
+  ctype = 'title'         -> CRITERION
+  ctype = 'urgent'        -> CRITERION
+  ctype = 'workspace'     -> CRITERION
+  ctype = 'floating_from' -> CRITERION_FROM
+  ctype = 'tiling_from'   -> CRITERION_FROM
   ctype = 'tiling', 'floating'
       -> call cfg_criteria_add($ctype, NULL); CRITERIA
   ']'
@@ -225,6 +233,22 @@ state CRITERIA:
 
 state CRITERION:
   '=' -> CRITERION_STR
+
+state CRITERION_FROM:
+  '=' -> CRITERION_FROM_STR_START
+
+state CRITERION_FROM_STR_START:
+  '"' -> CRITERION_FROM_STR
+  kind = 'auto', 'user'
+    -> call cfg_criteria_add($ctype, $kind); CRITERIA
+
+state CRITERION_FROM_STR:
+  kind = 'auto', 'user'
+    -> CRITERION_FROM_STR_END
+
+state CRITERION_FROM_STR_END:
+  '"'
+    -> call cfg_criteria_add($ctype, $kind); CRITERIA
 
 state CRITERION_STR:
   cvalue = word
@@ -242,7 +266,7 @@ state MOUSE_WARPING:
 
 # focus_wrapping
 state FOCUS_WRAPPING:
-  value = '1', 'yes', 'true', 'on', 'enable', 'active', '0', 'no', 'false', 'off', 'disable', 'inactive', 'force'
+  value = '1', 'yes', 'true', 'on', 'enable', 'active', '0', 'no', 'false', 'off', 'disable', 'inactive', 'force', 'workspace'
       -> call cfg_focus_wrapping($value)
 
 # force_focus_wrapping
@@ -498,6 +522,7 @@ state BAR:
   'separator_symbol'       -> BAR_SEPARATOR_SYMBOL
   'binding_mode_indicator' -> BAR_BINDING_MODE_INDICATOR
   'workspace_buttons'      -> BAR_WORKSPACE_BUTTONS
+  'workspace_min_width'    -> BAR_WORKSPACE_MIN_WIDTH
   'strip_workspace_numbers' -> BAR_STRIP_WORKSPACE_NUMBERS
   'strip_workspace_name' -> BAR_STRIP_WORKSPACE_NAME
   'verbose'                -> BAR_VERBOSE
@@ -602,6 +627,16 @@ state BAR_BINDING_MODE_INDICATOR:
 state BAR_WORKSPACE_BUTTONS:
   value = word
       -> call cfg_bar_workspace_buttons($value); BAR
+
+state BAR_WORKSPACE_MIN_WIDTH:
+  width = number
+      -> BAR_WORKSPACE_MIN_WIDTH_PX
+
+state BAR_WORKSPACE_MIN_WIDTH_PX:
+  'px'
+      ->
+  end
+      -> call cfg_bar_workspace_min_width(&width); BAR
 
 state BAR_STRIP_WORKSPACE_NUMBERS:
   value = word

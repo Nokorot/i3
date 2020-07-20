@@ -101,6 +101,18 @@ void workspace_show(Con *ws);
 void workspace_show_by_name(const char *num);
 
 /**
+ * Returns the first workspace.
+ *
+ */
+Con *workspace_first(void);
+
+/**
+ * Returns the last workspace.
+ *
+ */
+Con *workspace_last(void);
+
+/**
  * Returns the next workspace.
  *
  */

@@ -74,6 +74,11 @@ void cmd_resize_set(I3_CMD, long cwidth, const char *mode_width, long cheight, c
  */
 void cmd_resize(I3_CMD, const char *way, const char *direction, long resize_px, long resize_ppt);
 
+
+void cmd_default_border_radius(I3_CMD, long border_radius);
+
+void cmd_border_radius(I3_CMD, const char *mode, long border_radius);
+
 /**
  * Implementation of 'border normal|pixel [<n>]', 'border none|1pixel|toggle'.
  *
@@ -181,6 +186,12 @@ void cmd_exec(I3_CMD, const char *nosn, const char *command);
  *
  */
 void cmd_focus_direction(I3_CMD, const char *direction);
+
+/**
+ * Implementation of 'focus next|prev sibling'
+ *
+ */
+void cmd_focus_sibling(I3_CMD, const char *direction);
 
 /**
  * Implementation of 'focus tiling|floating|mode_toggle'.
@@ -309,10 +320,16 @@ void cmd_title_format(I3_CMD, const char *format);
 void cmd_rename_workspace(I3_CMD, const char *old_name, const char *new_name);
 
 /**
- * Implementation of 'bar (hidden_state hide|show|toggle)|(mode dock|hide|invisible|toggle) [<bar_id>]'
+ * Implementation of 'bar mode dock|hide|invisible|toggle [<bar_id>]'
  *
  */
-void cmd_bar(I3_CMD, const char *bar_type, const char *bar_value, const char *bar_id);
+void cmd_bar_mode(I3_CMD, const char *bar_mode, const char *bar_id);
+
+/**
+ * Implementation of 'bar hidden_state hide|show|toggle [<bar_id>]'
+ *
+ */
+void cmd_bar_hidden_state(I3_CMD, const char *bar_hidden_state, const char *bar_id);
 
 /**
  * Implementation of 'shmlog <size>|toggle|on|off'

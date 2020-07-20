@@ -22,6 +22,7 @@ state INITIAL:
   'shmlog' -> SHMLOG
   'debuglog' -> DEBUGLOG
   'border' -> BORDER
+  'default_border_radius' -> DEFAULT_BORDER_RADIUS
   'layout' -> LAYOUT
   'append_layout' -> APPEND_LAYOUT
   'workspace' -> WORKSPACE
@@ -86,6 +87,7 @@ state DEBUGLOG:
 
 # border normal|pixel [<n>]
 # border none|1pixel|toggle
+# border radius plus|minus|set <radius>
 state BORDER:
   border_style = 'normal', 'pixel', 'toggle'
     -> BORDER_WIDTH
@@ -93,6 +95,22 @@ state BORDER:
     -> call cmd_border($border_style, 0)
   '1pixel'
     -> call cmd_border("pixel", 1)
+  'radius'
+    -> BORDER_RADIUS
+
+state BORDER_RADIUS:
+  mode = 'plus', 'minus', 'set'
+    -> BORDER_RADIUS_MODE
+  border_radius = number
+    -> call cmd_border_radius("set", $border_radius)
+
+state BORDER_RADIUS_MODE:
+  border_radius = number
+    -> call cmd_border_radius($mode, $border_radius)
+
+state DEFAULT_BORDER_RADIUS:
+  default_border_radius = number
+    -> call cmd_default_border_radius($default_border_radius)
 
 # gaps inner|outer|horizontal|vertical|top|right|bottom|left [current] [set|plus|minus|toggle] <px>
 state GAPS:
@@ -143,13 +161,19 @@ state APPEND_LAYOUT:
 state WORKSPACE:
   no_auto_back_and_forth = '--no-auto-back-and-forth'
       ->
-  direction = 'next_on_output', 'prev_on_output', 'next', 'prev'
+  direction = 'next_on_output', 'prev_on_output', 'first', 'last', 'next', 'prev'
       -> call cmd_workspace($direction)
   'back_and_forth'
       -> call cmd_workspace_back_and_forth()
   'number'
       -> WORKSPACE_NUMBER
-  workspace = string 
+  'name'
+      -> WORKSPACE_NAME
+  workspace = string
+      -> call cmd_workspace_name($workspace, $no_auto_back_and_forth)
+
+state WORKSPACE_NAME:
+  workspace = string
       -> call cmd_workspace_name($workspace, $no_auto_back_and_forth)
 
 state WORKSPACE_NUMBER:
@@ -164,6 +188,8 @@ state WORKSPACE_NUMBER:
 state FOCUS:
   direction = 'left', 'right', 'up', 'down'
       -> call cmd_focus_direction($direction)
+  direction = 'prev', 'next'
+      -> FOCUS_AUTO
   'output'
       -> FOCUS_OUTPUT
   window_mode = 'tiling', 'floating', 'mode_toggle'
@@ -172,6 +198,12 @@ state FOCUS:
       -> call cmd_focus_level($level)
   end
       -> call cmd_focus()
+
+state FOCUS_AUTO:
+  'sibling'
+      -> call cmd_focus_sibling($direction)
+  end
+      -> call cmd_focus_direction($direction)
 
 state FOCUS_OUTPUT:
   output = string
@@ -379,7 +411,7 @@ state MOVE_DIRECTION_PX:
 state MOVE_WORKSPACE:
   'to '
       -> MOVE_WORKSPACE_TO_OUTPUT
-  workspace = 'next_on_output', 'prev_on_output', 'next', 'prev', 'current'
+  workspace = 'next_on_output', 'prev_on_output', 'first', 'last', 'next', 'prev', 'current'
       -> call cmd_move_con_to_workspace($workspace)
   'back_and_forth'
       -> call cmd_move_con_to_workspace_back_and_forth()
@@ -464,21 +496,27 @@ state TITLE_FORMAT:
 
 # bar (hidden_state hide|show|toggle)|(mode dock|hide|invisible|toggle) [<bar_id>]
 state BAR:
-  bar_type = 'hidden_state'
+  'hidden_state'
       -> BAR_HIDDEN_STATE
-  bar_type = 'mode'
+  'mode'
       -> BAR_MODE
 
 state BAR_HIDDEN_STATE:
   bar_value = 'hide', 'show', 'toggle'
-      -> BAR_W_ID
+      -> BAR_HIDDEN_STATE_ID
 
-state BAR_MODE:
-  bar_value = 'dock', 'hide', 'invisible', 'toggle'
-      -> BAR_W_ID
-
-state BAR_W_ID:
+state BAR_HIDDEN_STATE_ID:
   bar_id = word
       ->
   end
-      -> call cmd_bar($bar_type, $bar_value, $bar_id)
+      -> call cmd_bar_hidden_state($bar_value, $bar_id)
+
+state BAR_MODE:
+  bar_value = 'dock', 'hide', 'invisible', 'toggle'
+      -> BAR_MODE_ID
+
+state BAR_MODE_ID:
+  bar_id = word
+      ->
+  end
+      -> call cmd_bar_mode($bar_value, $bar_id)

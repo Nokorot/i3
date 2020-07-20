@@ -46,6 +46,13 @@ void con_focus(Con *con);
 void con_activate(Con *con);
 
 /**
+ * Activates the container like in con_activate but removes fullscreen
+ * restrictions and properly warps the pointer if needed.
+ *
+ */
+void con_activate_unblock(Con *con);
+
+/**
  * Closes the given container.
  *
  */
@@ -430,6 +437,12 @@ adjacent_t con_adjacent_borders(Con *con);
  */
 int con_border_style(Con *con);
 
+/*
+ * Sets the given border radius on con.
+ *
+ */
+void con_set_border_radius(Con *con, int border_radius);
+
 /**
  * Sets the given border style on con, correctly keeping the position/size of a
  * floating window.
@@ -540,3 +553,11 @@ bool con_swap(Con *first, Con *second);
  *
  */
 uint32_t con_rect_size_in_orientation(Con *con);
+
+/**
+ * Merges container specific data that should move with the window (e.g. marks,
+ * title format, and the window itself) into another container, and closes the
+ * old container.
+ *
+ */
+void con_merge_into(Con *old, Con *new);
